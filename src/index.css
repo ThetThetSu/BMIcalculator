@@ -1,0 +1,140 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto";
+}
+
+body {
+  background-color: #0f172a;
+  color: #f1f5f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background-color: #1e293b;
+  padding: 2rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+  width: 350px;
+  /* max-width: 400px; */
+  text-align: center;
+  height: 450px;
+}
+
+h1 {
+  color: #3b82f6;
+  margin-bottom: 0px;
+  /* border: 1px red solid; */
+}
+
+label {
+  display: block;
+  margin: 1rem 0 0.5rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #0f172a;
+  color: #f1f5f9;
+  font-size: 1rem;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+}
+
+button {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #3b82f6;
+  color: #f1f5f9;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #60a5fa;
+}
+
+.result {
+  margin-top: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #60a5fa;
+}
+
+.resultInput {
+  display: flex;
+  font-size: 12px;
+  /* margin: auto; */
+  justify-content: space-around;
+  padding: 10px;
+  gap: 10px;
+}
+.heightInput,
+.weightInput {
+  margin: auto;
+  display: flex;
+
+  /* border: 1px red solid; */
+}
+
+.resultInput label {
+  text-align: center;
+  justify-content: center;
+  margin: auto 5px;
+}
+
+.resultInput input {
+  width: 60px;
+  height: 25px;
+  font-size: 12px;
+}
+
+.saveBtn {
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  gap: 40px;
+}
+
+.notSave {
+  border: 1px blue solid;
+  background-color: #0f172a;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+}
+
+/* .wh-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10%;
+}
+
+.w-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: small;
+  gap: 5%;
+}
+
+.w-container input {
+  height: 2%;
+  width: 50%;
+}
+
+.w-container label {
+  margin: 0;
+}
+
+.w-container input::placeholder {
+  font-size: small;
+} */
