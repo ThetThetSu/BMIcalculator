@@ -33,7 +33,7 @@ const App = () => {
     // else category = "Obese";
 
     // setResult(`${userName}.Your BMI is ${bmi} : You are ${category}`);
-    setBmiInfo({ bmi, category, height, weight });
+    setBmiInfo({ bmi, category, height, weight, user: { username: userName } });
     setSeeResult(true);
   };
 
