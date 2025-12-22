@@ -1,7 +1,9 @@
 import { useState } from "react";
 import Result from "./Result";
+import Home from "./Home";
 
 const App = () => {
+  const [showHome, setShowHome] = useState(true);
   const [seeResult, setSeeResult] = useState(false);
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
@@ -27,25 +29,27 @@ const App = () => {
         ? "Overweight"
         : "Obese";
 
-    // if (bmi < 18.5) category = "Underweight";
-    // else if (bmi < 25) category = "Normal Weight";
-    // else if (bmi < 30) category = "Overweight";
-    // else category = "Obese";
-
-    // setResult(`${userName}.Your BMI is ${bmi} : You are ${category}`);
     setBmiInfo({ bmi, category, height, weight, user: { username: userName } });
     setSeeResult(true);
   };
 
+  const handleRecord = () => {
+    // Placeholder for record page
+    alert("Record page not implemented yet.");
+  };
+
   return (
     <>
-      {seeResult ? (
+      {showHome ? (
+        <Home onCalculate={() => setShowHome(false)} onRecord={handleRecord} />
+      ) : seeResult ? (
         <Result setSeeResult={setSeeResult} bmiInfo={bmiInfo} />
       ) : (
         <div className="container">
-          {/* Heading  */}
+          <button style={{ float: "left" }} onClick={() => setShowHome(true)}>
+            Home
+          </button>
           <h1>BMI Calculator</h1>
-          {/* Username */}
           <label htmlFor="username">Username</label>
           <input
             type="text"
@@ -54,7 +58,6 @@ const App = () => {
             value={userName}
             onChange={(e) => setUsername(e.target.value)}
           />
-          {/* Height */}
           <label htmlFor="height">Height (cm)</label>
           <input
             type="number"
@@ -64,7 +67,6 @@ const App = () => {
             onChange={(e) => setHeight(e.target.value)}
           />
 
-          {/* Weight */}
           <label htmlFor="weight">Weight (Kg)</label>
           <input
             type="number"
@@ -73,10 +75,9 @@ const App = () => {
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
           />
-          {/* Btn */}
+
           <button onClick={calculateBMI}>Calculate</button>
 
-          {/* Result */}
           <div className="result">{result}</div>
         </div>
       )}

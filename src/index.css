@@ -171,6 +171,20 @@ button:hover {
   user-select: none;
 }
 
+/* Home page styles */
+.home-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+
+.container p {
+  margin-top: 8px;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
 /* .wh-container {
   display: flex;
   justify-content: space-between;
