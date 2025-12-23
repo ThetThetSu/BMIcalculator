@@ -36,23 +36,29 @@ const RecordPage = () => {
   }, []);
 
   const getCategoryColor = (category) => {
-    const colors = {
-      Underweight: "#60a5fa",
-      "Normal weight": "#34d399",
-      Overweight: "#fbbf24",
-      Obese: "#f87171",
+    if (!category) return "#94a3b8";
+    
+    const normalized = category.toLowerCase().replace(/\s+/g, "");
+    const colorMap = {
+      underweight: "#3b82f6", // blue
+      normalweight: "#22c55e", // green
+      overweight: "#eab308", // yellow
+      obese: "#ef4444", // red
     };
-    return colors[category] || "#94a3b8";
+    return colorMap[normalized] || "#94a3b8";
   };
 
   const getCategoryBg = (category) => {
-    const colors = {
-      Underweight: "rgba(96, 165, 250, 0.1)",
-      "Normal weight": "rgba(52, 211, 153, 0.1)",
-      Overweight: "rgba(251, 191, 36, 0.1)",
-      Obese: "rgba(248, 113, 113, 0.1)",
+    if (!category) return "rgba(148, 163, 184, 0.1)";
+    
+    const normalized = category.toLowerCase().replace(/\s+/g, "");
+    const bgMap = {
+      underweight: "rgba(59, 130, 246, 0.1)", // blue background
+      normalweight: "rgba(34, 197, 94, 0.1)", // green background
+      overweight: "rgba(234, 179, 8, 0.1)", // yellow background
+      obese: "rgba(239, 68, 68, 0.1)", // red background
     };
-    return colors[category] || "rgba(148, 163, 184, 0.1)";
+    return bgMap[normalized] || "rgba(148, 163, 184, 0.1)";
   };
 
   return (
@@ -69,12 +75,14 @@ const RecordPage = () => {
           </button>
           <div className="title-group">
             <h1>Saved Records</h1>
-            {records.length > 0 && (
-              <span className="records-count">{records.length} {records.length === 1 ? 'record' : 'records'}</span>
-            )}
           </div>
         </div>
       </div>
+      {records.length > 0 && (
+        <div className="records-count-row">
+          <span className="records-count">{records.length} {records.length === 1 ? 'record' : 'records'}</span>
+        </div>
+      )}
 
       {loading ? (
         <div className="records-loading">
@@ -105,7 +113,7 @@ const RecordPage = () => {
           <table className="records-table">
             <thead>
               <tr>
-                <th>#</th>
+                <th></th>
                 <th>BMI</th>
                 <th>Category</th>
                 <th>Height</th>
@@ -116,7 +124,7 @@ const RecordPage = () => {
             <tbody>
               {records.map((r, i) => (
                 <tr key={r.id || i}>
-                  <td className="record-id">{r.id ?? i + 1}</td>
+                  <td className="record-id">{i + 1}</td>
                   <td className="record-bmi">
                     <strong>{r.bmi ?? r.bmiInfo?.bmi}</strong>
                   </td>

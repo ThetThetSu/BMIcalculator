@@ -335,6 +335,11 @@ button:hover {
   text-overflow: ellipsis;
 }
 
+.records-count-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .records-count {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%);
   color: #93c5fd;
