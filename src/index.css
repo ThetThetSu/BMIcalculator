@@ -506,6 +506,7 @@ button:hover {
   box-sizing: border-box;
   flex: 1;
   overflow-y: auto;
+  padding-right: 0.5rem;
 }
 
 .record-card {
