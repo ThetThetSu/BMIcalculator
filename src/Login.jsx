@@ -76,7 +76,7 @@ function Login() {
             <button
               type="button"
               className="notSave"
-              onClick={() => navigate("/")}
+              onClick={() => navigate(from || "/", { replace: true })}
             >
               Cancel
             </button>

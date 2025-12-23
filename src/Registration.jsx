@@ -69,7 +69,7 @@ function Registration({ defaultUsername = "", onCancel, onSave }) {
     if (onCancel) {
       onCancel();
     } else {
-      navigate("/");
+      navigate(from || "/", { replace: true });
     }
   };
 
