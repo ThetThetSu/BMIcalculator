@@ -46,19 +46,7 @@ function Login() {
     <div className="modal-overlay">
       <div className="modal">
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <h2>
-            <span
-              type="button"
-              aria-label="Back to home"
-              onClick={() => navigate("/")}
-              style={{
-                cursor: "pointer",
-              }}
-            >
-              ⬅️
-            </span>
-            Login to Save Result
-          </h2>
+          <h2>Login to Save Result</h2>
         </div>
         <form onSubmit={handleSubmit}>
           <label>Username</label>
