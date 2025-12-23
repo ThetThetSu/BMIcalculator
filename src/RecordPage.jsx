@@ -1,22 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const RecordPage = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const apiBase = "http://localhost:5000";
 
   async function fetchRecords() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${apiBase}/api/records`);
-      if (!res.ok) throw new Error(`API ${res.status}`);
-      const data = await res.json();
-      setRecords(data || []);
+      const storedUserId = localStorage.getItem("userId");
+      if (!storedUserId) {
+        setError("User not logged in");
+        setRecords([]);
+        return;
+      }
+
+      const res = await axios.get(
+        `${apiBase}/api/records/user/${storedUserId}`
+      );
+      setRecords(res.data || []);
     } catch (e) {
+      console.error(e);
       setError("Failed to load records");
       setRecords([]);
     } finally {

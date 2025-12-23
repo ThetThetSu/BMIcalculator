@@ -1,27 +1,41 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-function Login({ defaultUsername = "", onCancel, onSave }) {
+const apiBase = "http://localhost:5000";
+
+function Login() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState(defaultUsername || "");
-  // const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setError("");
     if (!username || !password) {
       setError("Please fill all fields");
       return;
     }
-    // Basic email check
-    // if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-    //   setError("Please enter a valid email");
-    //   return;
-    // }
 
-    onSave({ username, password });
+    try {
+      const res = await axios.post(`${apiBase}/api/login`, {
+        username,
+        password,
+      });
+      const { userId, username: returnedUsername } = res.data || {};
+      if (userId) {
+        localStorage.setItem("userId", String(userId));
+        localStorage.setItem("username", returnedUsername || username);
+        navigate("/");
+      } else {
+        setError("Login failed");
+      }
+    } catch (err) {
+      if (err.response && err.response.status === 401)
+        setError("Invalid credentials");
+      else setError("Login failed");
+    }
   }
 
   return (
@@ -62,10 +76,14 @@ function Login({ defaultUsername = "", onCancel, onSave }) {
           {error && <div className="form-error">{error}</div>}
 
           <div className="actions">
-            <button type="button" className="notSave" onClick={onCancel}>
+            <button
+              type="button"
+              className="notSave"
+              onClick={() => navigate("/")}
+            >
               Cancel
             </button>
-            <button type="submit">Save</button>
+            <button type="submit">Login</button>
           </div>
         </form>
       </div>
