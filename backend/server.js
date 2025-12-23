@@ -84,6 +84,25 @@ app.post("/api/login", async (req, res) => {
 //Todo Step2.5: Logout API
 app.post("/api/logout", async (req, res) => {
   try {
+    const { username, password } = req.body;
+
+    // 1. Check if user exists
+    const result = await query(
+      "SELECT id, password_hash FROM users WHERE username = $1",
+      [username]
+    );
+
+    if (!result.rows[0]) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    // 2. Verify password
+    // ⚠️ Later use bcrypt, now simplified
+    if (password !== result.rows[0].password_hash) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    // 3. Logout successful
     // ⚠️ Later implement token/session invalidation if needed
     res.json({ message: "Logged out successfully" });
   } catch (e) {

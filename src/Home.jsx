@@ -1,9 +1,24 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <div className="container">
+      <div className="auth-buttons">
+        <button 
+          className="auth-btn login-btn" 
+          onClick={() => navigate("/login")}
+        >
+          Log in
+        </button>
+        <button 
+          className="auth-btn signup-btn" 
+          onClick={() => navigate("/registration")}
+        >
+          Sign up
+        </button>
+      </div>
       <h1>BMI Calculator</h1>
       <p>Quickly calculate your Body Mass Index and save records.</p>
 
