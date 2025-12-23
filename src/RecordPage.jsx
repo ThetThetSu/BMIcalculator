@@ -109,53 +109,59 @@ const RecordPage = () => {
           </Link>
         </div>
       ) : (
-        <div className="records-table-wrapper">
-          <table className="records-table">
-            <thead>
-              <tr>
-                <th></th>
-                <th>BMI</th>
-                <th>Category</th>
-                <th>Height</th>
-                <th>Weight</th>
-                <th>Saved At</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((r, i) => (
-                <tr key={r.id || i}>
-                  <td className="record-id">{i + 1}</td>
-                  <td className="record-bmi">
-                    <strong>{r.bmi ?? r.bmiInfo?.bmi}</strong>
-                  </td>
-                  <td>
+        <div className="records-list">
+          {records.map((r, i) => {
+            const category = r.category ?? r.bmiInfo?.category ?? "";
+            const categoryColor = getCategoryColor(category);
+            const bmi = r.bmi ?? r.bmiInfo?.bmi;
+            const height = r.height ?? r.bmiInfo?.height ?? "-";
+            const weight = r.weight ?? r.bmiInfo?.weight ?? "-";
+            const savedAt = r.savedat
+              ? new Date(r.savedat).toLocaleDateString("en-US", {
+                  month: "numeric",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "-";
+
+            return (
+              <div
+                key={r.id || i}
+                className="record-card"
+                style={{
+                  borderLeft: `4px solid ${categoryColor}`,
+                }}
+              >
+                <div className="record-card-content">
+                  <div className="record-main-info">
+                    <div className="record-bmi-value">{bmi}</div>
                     <span
                       className="category-badge"
                       style={{
-                        color: getCategoryColor(r.category ?? r.bmiInfo?.category),
-                        backgroundColor: getCategoryBg(r.category ?? r.bmiInfo?.category),
+                        color: categoryColor,
+                        backgroundColor: getCategoryBg(category),
                       }}
                     >
-                      {r.category ?? r.bmiInfo?.category ?? "-"}
+                      {category || "-"}
                     </span>
-                  </td>
-                  <td>{r.height ?? r.bmiInfo?.height ?? "-"} cm</td>
-                  <td>{r.weight ?? r.bmiInfo?.weight ?? "-"} kg</td>
-                  <td className="record-date">
-                    {r.savedat
-                      ? new Date(r.savedat).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })
-                      : "-"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                  <div className="record-bottom-row">
+                    <div className="record-details">
+                      <span className="record-detail-item">
+                        <span className="record-detail-label">Height:</span> {height}cm
+                      </span>
+                      <span className="record-detail-item">
+                        <span className="record-detail-label">Weight:</span> {weight}kg
+                      </span>
+                    </div>
+                    <div className="record-date">{savedAt}</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

@@ -25,6 +25,8 @@ body {
   height: 450px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -494,76 +496,101 @@ button:hover {
   font-size: 14px;
 }
 
-.records-table-wrapper {
-  overflow-x: auto;
-  margin-top: 1rem;
-  border-radius: 8px;
-  background-color: rgba(15, 23, 42, 0.5);
-}
-
-.records-table {
+.records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
   width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
+  max-width: 100%;
+  box-sizing: border-box;
+  flex: 1;
+  overflow-y: auto;
 }
 
-.records-table thead {
-  background-color: rgba(59, 130, 246, 0.1);
-}
-
-.records-table th {
+.record-card {
+  background-color: rgba(15, 23, 42, 0.3);
+  border-radius: 6px;
   padding: 0.75rem;
-  text-align: left;
-  color: #60a5fa;
-  font-weight: 600;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
-.records-table tbody tr {
-  border-bottom: 1px solid rgba(51, 65, 85, 0.3);
-  transition: background-color 0.2s ease;
+.record-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.records-table tbody tr:hover {
-  background-color: rgba(59, 130, 246, 0.05);
+.record-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
-.records-table td {
-  padding: 1rem 0.75rem;
+.record-main-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.record-bmi-value {
+  font-size: 24px;
+  font-weight: 700;
   color: #e2e8f0;
-}
-
-.record-id {
-  color: #94a3b8;
-  font-weight: 500;
-  width: 50px;
-}
-
-.record-bmi {
-  font-size: 16px;
-}
-
-.record-bmi strong {
-  color: #60a5fa;
-  font-weight: 600;
+  line-height: 1;
 }
 
 .category-badge {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
   text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.record-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.record-details {
+  display: flex;
+  gap: 0.75rem;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+}
+
+.record-detail-item {
+  color: #e2e8f0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  white-space: nowrap;
+}
+
+.record-detail-label {
+  color: #94a3b8;
+  font-weight: 500;
 }
 
 .record-date {
   color: #94a3b8;
-  font-size: 12px;
+  font-size: 11px;
   white-space: nowrap;
+  text-align: right;
 }
 
 @media (max-width: 768px) {
@@ -585,13 +612,23 @@ button:hover {
     flex: 1;
   }
 
-  .records-table {
-    font-size: 12px;
+  .record-card {
+    padding: 0.875rem;
   }
 
-  .records-table th,
-  .records-table td {
-    padding: 0.5rem 0.4rem;
+  .record-bmi-value {
+    font-size: 24px;
+  }
+
+  .category-badge {
+    font-size: 12px;
+    padding: 0.3rem 0.75rem;
+  }
+
+  .record-details {
+    font-size: 13px;
+    flex-direction: column;
+    gap: 0.25rem;
   }
 }
 
