@@ -52,15 +52,15 @@ const Home = () => {
     <div className="container">
       <div className="auth-header">
         {isLoggedIn ? (
-          <>
-            <button className="logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
+          <div className="user-profile-section">
             <div className="username-display">
               <span className="username-icon">👤</span>
               <span className="username-text">{username}</span>
             </div>
-          </>
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
         ) : (
           <div className="auth-buttons">
             <button 
@@ -90,3 +90,4 @@ const Home = () => {
 };
 
 export default Home;
+

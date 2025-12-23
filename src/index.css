@@ -202,10 +202,23 @@ button:hover {
 .auth-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 1.5rem;
   margin-top: -1rem;
   width: 100%;
+  position: relative;
+  padding: 0 1rem;
+}
+
+.user-profile-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.logout-btn {
+  margin-left: auto;
 }
 
 .auth-buttons {
@@ -240,40 +253,49 @@ button:hover {
 
 .logout-btn {
   margin-top: 0;
-  padding: 0.5rem 1rem;
-  font-size: 14px;
-  font-weight: 500;
-  background-color: #ef4444;
-  color: #f1f5f9;
+  padding: 0.45rem 1rem;
+  font-size: 12px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .logout-btn:hover {
-  background-color: #f87171;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.35);
+  transform: translateY(-1px);
 }
 
 .username-display {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 0.5rem 0.75rem;
-  background-color: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  border-radius: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
   color: #60a5fa;
+  cursor: default;
 }
 
 .username-icon {
-  font-size: 16px;
+  font-size: 20px;
+  filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3));
 }
 
 .username-text {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   color: #93c5fd;
+  letter-spacing: 0.3px;
 }
 
 /* Records page styles */
