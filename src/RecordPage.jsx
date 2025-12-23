@@ -147,16 +147,18 @@ const RecordPage = () => {
                       {category || "-"}
                     </span>
                   </div>
-                  <div className="record-bottom-row">
-                    <div className="record-details">
-                      <span className="record-detail-item">
-                        <span className="record-detail-label">Height:</span> {height}cm
-                      </span>
-                      <span className="record-detail-item">
-                        <span className="record-detail-label">Weight:</span> {weight}kg
-                      </span>
+                  <div className="record-details">
+                    <div className="record-detail-item">
+                      <span className="record-detail-label">Height:</span>
+                      <span className="record-detail-value">{height}cm</span>
                     </div>
-                    <div className="record-date">{savedAt}</div>
+                    <div className="record-bottom-row">
+                      <div className="record-detail-item">
+                        <span className="record-detail-label">Weight:</span>
+                        <span className="record-detail-value">{weight}kg</span>
+                      </div>
+                      <div className="record-date">{savedAt}</div>
+                    </div>
                   </div>
                 </div>
               </div>
