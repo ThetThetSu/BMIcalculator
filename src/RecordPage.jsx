@@ -13,20 +13,17 @@ const RecordPage = () => {
     setLoading(true);
     setError("");
     try {
-      const storedUserId = localStorage.getItem("userId");
-      if (!storedUserId) {
-        setError("User not logged in");
-        setRecords([]);
-        return;
-      }
-
-      const res = await axios.get(
-        `${apiBase}/api/records/user/${storedUserId}`
-      );
+      const res = await axios.get(`${apiBase}/api/records`, {
+        withCredentials: true,
+      });
       setRecords(res.data || []);
     } catch (e) {
       console.error(e);
-      setError("Failed to load records");
+      if (e.response && e.response.status === 401) {
+        setError("User not logged in");
+      } else {
+        setError("Failed to load records");
+      }
       setRecords([]);
     } finally {
       setLoading(false);

@@ -19,14 +19,18 @@ function Login() {
     }
 
     try {
-      const res = await axios.post(`${apiBase}/api/login`, {
-        username,
-        password,
-      });
-      const { userId, username: returnedUsername } = res.data || {};
+      const res = await axios.post(
+        `${apiBase}/api/login`,
+        {
+          username,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      const { userId } = res.data || {};
       if (userId) {
-        localStorage.setItem("userId", String(userId));
-        localStorage.setItem("username", returnedUsername || username);
         navigate("/record");
       } else {
         setError("Login failed");

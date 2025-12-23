@@ -4,12 +4,32 @@ import express from "express";
 import cors from "cors";
 import { query, initDb } from "./db.js";
 import bodyParser from "body-parser";
+import session from "express-session";
+
 const app = express();
-app.use(cors());
+
+// Configure CORS to allow credentials
+app.use(cors({
+  origin: "http://localhost:5173", // Vite default port
+  credentials: true
+}));
+
 app.use(express.json());
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Configure session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET || "bmi-calculator-secret-key-change-in-production",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // Set to true if using HTTPS
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
 
 const PORT = process.env.PORT || 5000;
 
@@ -41,7 +61,11 @@ app.post("/api/signup", async (req, res) => {
       [username, password] // ⚠️ later replace with bcrypt
     );
 
-    // 3. Return user info
+    // 3. Create session for new user
+    req.session.userId = result.rows[0].id;
+    req.session.username = result.rows[0].username;
+
+    // 4. Return user info
     res.status(201).json({
       userId: result.rows[0].id,
       username: result.rows[0].username,
@@ -58,7 +82,7 @@ app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
 
     const result = await query(
-      "SELECT id, password_hash FROM users WHERE username = $1",
+      "SELECT id, password_hash, username FROM users WHERE username = $1",
       [username]
     );
 
@@ -71,10 +95,34 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
+    // Create session
+    req.session.userId = result.rows[0].id;
+    req.session.username = result.rows[0].username;
+
     res.json({
       userId: result.rows[0].id,
-      username,
+      username: result.rows[0].username,
     });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Check authentication status
+app.get("/api/auth/me", async (req, res) => {
+  try {
+    if (req.session.userId) {
+      res.json({
+        authenticated: true,
+        userId: req.session.userId,
+        username: req.session.username,
+      });
+    } else {
+      res.json({
+        authenticated: false,
+      });
+    }
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: e.message });
@@ -84,27 +132,13 @@ app.post("/api/login", async (req, res) => {
 //Todo Step2.5: Logout API
 app.post("/api/logout", async (req, res) => {
   try {
-    const { username, password } = req.body;
-
-    // 1. Check if user exists
-    const result = await query(
-      "SELECT id, password_hash FROM users WHERE username = $1",
-      [username]
-    );
-
-    if (!result.rows[0]) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
-
-    // 2. Verify password
-    // ⚠️ Later use bcrypt, now simplified
-    if (password !== result.rows[0].password_hash) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
-
-    // 3. Logout successful
-    // ⚠️ Later implement token/session invalidation if needed
-    res.json({ message: "Logged out successfully" });
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        return res.status(500).json({ error: "Failed to logout" });
+      }
+      res.json({ message: "Logged out successfully" });
+    });
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: e.message });
@@ -114,7 +148,12 @@ app.post("/api/logout", async (req, res) => {
 //Todo Step3: Save BMI record (connected to User)
 app.post("/api/records", async (req, res) => {
   try {
-    const { userId, height, weight, bmi, category } = req.body;
+    if (!req.session.userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const { height, weight, bmi, category } = req.body;
+    const userId = req.session.userId;
 
     const sql = `
       INSERT INTO bmi_records (user_id,height,weight, bmi, category, savedat)
@@ -133,10 +172,13 @@ app.post("/api/records", async (req, res) => {
 });
 
 //Todo Step 4: Get only logged-in user records
-
-app.get("/api/records/user/:userId", async (req, res) => {
+app.get("/api/records", async (req, res) => {
   try {
-    const { userId } = req.params;
+    if (!req.session.userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const userId = req.session.userId;
 
     const result = await query(
       "SELECT * FROM bmi_records WHERE user_id = $1 ORDER BY id DESC",
