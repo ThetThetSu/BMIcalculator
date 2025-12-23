@@ -27,7 +27,7 @@ function Login() {
       if (userId) {
         localStorage.setItem("userId", String(userId));
         localStorage.setItem("username", returnedUsername || username);
-        navigate("/");
+        navigate("/record");
       } else {
         setError("Login failed");
       }

@@ -11,7 +11,7 @@ const Home = () => {
         <Link to="/calculate">
           <button>Calculate</button>
         </Link>
-        <Link to="/record">
+        <Link to="/login">
           <button className="notSave">Record</button>
         </Link>
       </div>
