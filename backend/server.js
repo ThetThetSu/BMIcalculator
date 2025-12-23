@@ -37,9 +37,6 @@ initDb().catch((err) => {
   console.error("Failed to initialize DB", err);
   process.exit(1);
 });
-app.get("/", (req, res) => {
-  res.send("Hello World from Express!"); // Send a response to the client
-});
 
 //Todo Step1: Sign up API
 app.post("/api/signup", async (req, res) => {
