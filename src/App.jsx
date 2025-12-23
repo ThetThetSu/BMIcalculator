@@ -5,6 +5,7 @@ import Calculate from "./Calculate";
 import RecordPage from "./RecordPage";
 import { useState } from "react";
 import Registration from "./Registration";
+import Login from "./Login";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -13,11 +14,9 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/calculate" element={<Calculate />} />
       <Route path="/result" element={<Result />} />
-      <Route path="/record" element={<RecordPage user={user} />} />
-      <Route
-        path="/registration"
-        element={<Registration setUser={setUser} />}
-      />
+      <Route path="/record" element={<RecordPage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/registration" element={<Registration />} />
     </Routes>
   );
 }
