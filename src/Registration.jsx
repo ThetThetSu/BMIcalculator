@@ -41,13 +41,12 @@ function Registration({ defaultUsername = "", onCancel, onSave }) {
       const { userId } = res.data || {};
       
       if (userId) {
-        // If onSave is provided (modal use case), call it
+        // If onSave is provided (modal use case), call it for any side effects
         if (onSave) {
           onSave({ username, password });
-        } else {
-          // Route use case - navigate back to the previous page or default to /record
-          navigate(from, { replace: true });
         }
+        // Always navigate back to the previous page or default to /record (like Login)
+        navigate(from, { replace: true });
       } else {
         setError("Registration failed");
       }
