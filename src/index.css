@@ -192,27 +192,18 @@ button:hover {
   margin-bottom: 1.5rem;
 }
 
-.auth-btn {
+.auth-buttons button {
+  margin-top: 0;
   padding: 0.5rem 1rem;
   font-size: 14px;
   font-weight: 500;
+}
+
+.auth-btn {
   border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-top: 0;
-}
-
-.login-btn {
-  background-color: transparent;
-  color: #60a5fa;
-  border: 1px solid #3b82f6;
-}
-
-.login-btn:hover {
-  background-color: rgba(59, 130, 246, 0.1);
-  color: #93c5fd;
-  border-color: #60a5fa;
 }
 
 .signup-btn {

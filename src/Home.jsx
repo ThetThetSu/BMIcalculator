@@ -7,7 +7,7 @@ const Home = () => {
     <div className="container">
       <div className="auth-buttons">
         <button 
-          className="auth-btn login-btn" 
+          className="notSave" 
           onClick={() => navigate("/login")}
         >
           Log in
