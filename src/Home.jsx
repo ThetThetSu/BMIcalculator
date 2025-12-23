@@ -78,16 +78,18 @@ const Home = () => {
           </div>
         )}
       </div>
-      <h1>BMI Calculator</h1>
-      <p>Quickly calculate your Body Mass Index and save records.</p>
+      <div className="home-content">
+        <h1>BMI Calculator</h1>
+        <p>Quickly calculate your Body Mass Index and save records.</p>
 
-      <div className="home-buttons">
-        <Link to="/calculate">
-          <button>Calculate</button>
-        </Link>
-        <Link to={isLoggedIn ? "/record" : "/login"}>
-          <button className="notSave">Record</button>
-        </Link>
+        <div className="home-buttons">
+          <Link to="/calculate">
+            <button>Calculate</button>
+          </Link>
+          <Link to={isLoggedIn ? "/record" : "/login"}>
+            <button className="notSave">Record</button>
+          </Link>
+        </div>
       </div>
     </div>
   );

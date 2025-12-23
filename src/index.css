@@ -23,6 +23,8 @@ body {
   /* max-width: 400px; */
   text-align: center;
   height: 450px;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
@@ -172,6 +174,16 @@ button:hover {
 }
 
 /* Home page styles */
+.home-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  min-height: 0;
+  text-align: center;
+}
+
 .home-buttons {
   display: flex;
   gap: 12px;
