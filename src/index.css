@@ -544,7 +544,7 @@ button:hover {
 }
 
 .record-bmi-value {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: #e2e8f0;
   line-height: 1.1;
@@ -592,11 +592,13 @@ button:hover {
   color: #94a3b8;
   font-weight: 500;
   min-width: fit-content;
+  font-size: 11px;
 }
 
 .record-detail-value {
   color: #e2e8f0;
   font-weight: 600;
+  font-size: 13px;
 }
 
 .record-date {
