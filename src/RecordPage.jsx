@@ -108,7 +108,7 @@ const RecordPage = () => {
                       color: "#94a3b8",
                     }}
                   >
-                    {r.savedAt ? new Date(r.savedAt).toLocaleString() : "-"}
+                    {r.savedat ? new Date(r.savedat).toLocaleString() : "-"}
                   </td>
                 </tr>
               ))}
