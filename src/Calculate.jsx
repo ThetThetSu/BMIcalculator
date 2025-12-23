@@ -45,21 +45,20 @@ const Calculate = () => {
 
   return (
     <div className="container">
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <h1>
-          {" "}
-          <span
-            type="button"
-            aria-label="Back to home"
+      <div className="records-header">
+        <div className="records-title-section">
+          <button
+            className="back-button"
             onClick={() => navigate("/")}
-            style={{
-              cursor: "pointer",
-            }}
+            aria-label="Back to home"
+            title="Back to home"
           >
-            ⬅️
-          </span>
-          BMI Calculator
-        </h1>
+            ❮
+          </button>
+          <div className="title-group">
+            <h1>BMI Calculator</h1>
+          </div>
+        </div>
       </div>
 
       <label htmlFor="username">Username</label>
