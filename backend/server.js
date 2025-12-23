@@ -81,6 +81,17 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+//Todo Step2.5: Logout API
+app.post("/api/logout", async (req, res) => {
+  try {
+    // ⚠️ Later implement token/session invalidation if needed
+    res.json({ message: "Logged out successfully" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
 //Todo Step3: Save BMI record (connected to User)
 app.post("/api/records", async (req, res) => {
   try {
