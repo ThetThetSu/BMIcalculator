@@ -65,7 +65,7 @@ const RecordPage = () => {
             aria-label="Back to home"
             title="Back to home"
           >
-            ⬅️
+            ❮
           </button>
           <div className="title-group">
             <h1>Saved Records</h1>
