@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 const Calculate = () => {
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
-  const [userName, setUsername] = useState("");
   const [resultMsg, setResultMsg] = useState("");
   const navigate = useNavigate();
 
@@ -33,7 +32,6 @@ const Calculate = () => {
       category,
       height,
       weight,
-      user: { username: userName },
     };
     try {
       sessionStorage.setItem("bmi_info", JSON.stringify(bmiInfo));
@@ -61,36 +59,39 @@ const Calculate = () => {
         </div>
       </div>
 
-      <label htmlFor="username">Username</label>
-      <input
-        type="text"
-        id="username"
-        placeholder="Name"
-        value={userName}
-        onChange={(e) => setUsername(e.target.value)}
-      />
+      <div style={{ 
+        display: "flex", 
+        flexDirection: "column", 
+        alignItems: "center", 
+        gap: "16px",
+        marginTop: "32px"
+      }}>
+        <div style={{ width: "100%", maxWidth: "400px" }}>
+          <label htmlFor="height">Height (cm)</label>
+          <input
+            type="number"
+            id="height"
+            placeholder="e.g. 160"
+            value={height}
+            onChange={(e) => setHeight(e.target.value)}
+          />
+        </div>
 
-      <label htmlFor="height">Height (cm)</label>
-      <input
-        type="number"
-        id="height"
-        placeholder="e.g. 160"
-        value={height}
-        onChange={(e) => setHeight(e.target.value)}
-      />
+        <div style={{ width: "100%", maxWidth: "400px" }}>
+          <label htmlFor="weight">Weight (Kg)</label>
+          <input
+            type="number"
+            id="weight"
+            placeholder="e.g. 65"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+          />
+        </div>
 
-      <label htmlFor="weight">Weight (Kg)</label>
-      <input
-        type="number"
-        id="weight"
-        placeholder="e.g. 65"
-        value={weight}
-        onChange={(e) => setWeight(e.target.value)}
-      />
+        <button onClick={calculateBMI}>Calculate</button>
 
-      <button onClick={calculateBMI}>Calculate</button>
-
-      <div className="result">{resultMsg}</div>
+        {resultMsg && <div className="result">{resultMsg}</div>}
+      </div>
     </div>
   );
 };
