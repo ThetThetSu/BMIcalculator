@@ -1,16 +1,19 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const Home = ({ onCalculate, onRecord }) => {
+const Home = () => {
   return (
     <div className="container">
       <h1>BMI Calculator</h1>
       <p>Quickly calculate your Body Mass Index and save records.</p>
 
       <div className="home-buttons">
-        <button onClick={onCalculate}>Calculate</button>
-        <button className="notSave" onClick={onRecord}>
-          Record
-        </button>
+        <Link to="/calculate">
+          <button>Calculate</button>
+        </Link>
+        <Link to="/record">
+          <button className="notSave">Record</button>
+        </Link>
       </div>
     </div>
   );

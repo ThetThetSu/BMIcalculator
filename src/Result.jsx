@@ -1,14 +1,29 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js/auto";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Doughnut } from "react-chartjs-2";
 import Category from "./Category";
 import Registration from "./Registration";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-function Result({ bmiInfo, setSeeResult }) {
+function Result({ bmiInfo: propBmiInfo }) {
   const [showRegister, setShowRegister] = useState(false);
   const [savedMessage, setSavedMessage] = useState("");
+  const [bmiInfo, setBmiInfo] = useState(propBmiInfo || null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!bmiInfo) {
+      try {
+        const stored = sessionStorage.getItem("bmi_info");
+        if (stored) setBmiInfo(JSON.parse(stored));
+      } catch (e) {
+        // ignore
+      }
+    }
+  }, [bmiInfo]);
+
   const { bmi, category, height, weight } = bmiInfo || {};
 
   const colors = {
@@ -28,7 +43,7 @@ function Result({ bmiInfo, setSeeResult }) {
   // }
 
   function handleBack() {
-    setSeeResult(false);
+    navigate("/calculate");
   }
 
   function handleSaveClick() {
@@ -55,14 +70,14 @@ function Result({ bmiInfo, setSeeResult }) {
     setTimeout(() => setSavedMessage(""), 2500);
   }
 
+  const numBmi = parseFloat(bmi) || 0;
   const data = {
     labels: [],
     datasets: [
       {
-        // label: "Poll",
-        data: [bmi, 30 - bmi],
-        backgroundColor: [`${color.first}`, `${color.second}`],
-        borderColor: [`${color.first}`, `${color.second}`],
+        data: [numBmi, Math.max(0, 30 - numBmi)],
+        backgroundColor: [color.first, color.second],
+        borderColor: [color.first, color.second],
       },
     ],
   };
