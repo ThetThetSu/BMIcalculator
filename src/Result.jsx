@@ -255,15 +255,15 @@ function Result({ bmiInfo: propBmiInfo }) {
           </div>
 
           <Category />
-          
-          <div className="saveBtn">
-            <button onClick={handleBack} className="notSave">
-              Back to Calculate
-            </button>
-            <button onClick={handleSaveClick} disabled={isSaving}>
-              {isSaving ? "Saving..." : "Save Result"}
-            </button>
-          </div>
+          <button onClick={handleBack}>Back to Calculate</button>
+        </div>
+        <div className="saveBtn">
+          <button onClick={handleBack} className="notSave">
+            Don't save
+          </button>
+          <button onClick={handleSaveClick} disabled={isSaving}>
+            {isSaving ? "Saving..." : "Save Result"}
+          </button>
         </div>
       </div>
       {showRegister && (
