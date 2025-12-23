@@ -1,15 +1,19 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 const apiBase = "http://localhost:5000";
 
 function Registration({ defaultUsername = "", onCancel, onSave }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [username, setUsername] = useState(defaultUsername || "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Get the redirect location from state or search params, default to /record
+  const from = location.state?.from?.pathname || new URLSearchParams(location.search).get("from") || "/record";
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -41,8 +45,8 @@ function Registration({ defaultUsername = "", onCancel, onSave }) {
         if (onSave) {
           onSave({ username, password });
         } else {
-          // Route use case - navigate after successful signup
-          navigate("/record");
+          // Route use case - navigate back to the previous page or default to /record
+          navigate(from, { replace: true });
         }
       } else {
         setError("Registration failed");
@@ -106,6 +110,27 @@ function Registration({ defaultUsername = "", onCancel, onSave }) {
             </button>
             <button type="submit" disabled={loading}>
               {loading ? "Registering..." : "Register"}
+            </button>
+          </div>
+          
+          <div style={{ marginTop: "16px", textAlign: "center" }}>
+            <span style={{ color: "#666" }}>Already have an account? </span>
+            <button
+              type="button"
+              onClick={() => navigate("/login", { 
+                state: { from: location.state?.from || { pathname: from } } 
+              })}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#3b82f6",
+                cursor: "pointer",
+                textDecoration: "underline",
+                padding: 0,
+                fontSize: "inherit"
+              }}
+            >
+              Log in
             </button>
           </div>
         </form>

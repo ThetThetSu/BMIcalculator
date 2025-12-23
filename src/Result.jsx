@@ -1,9 +1,12 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js/auto";
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Doughnut } from "react-chartjs-2";
+import axios from "axios";
 import Category from "./Category";
 import Registration from "./Registration";
+
+const apiBase = "http://localhost:5000";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -11,7 +14,10 @@ function Result({ bmiInfo: propBmiInfo }) {
   const [showRegister, setShowRegister] = useState(false);
   const [savedMessage, setSavedMessage] = useState("");
   const [bmiInfo, setBmiInfo] = useState(propBmiInfo || null);
+  const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const hasCheckedPendingSaveRef = useRef(false);
 
   useEffect(() => {
     if (!bmiInfo) {
@@ -23,6 +29,46 @@ function Result({ bmiInfo: propBmiInfo }) {
       }
     }
   }, [bmiInfo]);
+
+  // Check if there's a pending save after login/registration
+  // This runs whenever the component mounts or location changes (user navigates back)
+  useEffect(() => {
+    const checkPendingSave = async () => {
+      if (!bmiInfo || hasCheckedPendingSaveRef.current || isSaving) return;
+      
+      try {
+        const pendingSave = sessionStorage.getItem("pending_bmi_save");
+        if (pendingSave) {
+          // Check if user is now authenticated
+          const authRes = await axios.get(`${apiBase}/api/auth/me`, {
+            withCredentials: true,
+          });
+
+          if (authRes.data.authenticated) {
+            // User is logged in/registered, save the pending record
+            hasCheckedPendingSaveRef.current = true; // Set before saving to prevent duplicate checks
+            const pendingData = JSON.parse(pendingSave);
+            setIsSaving(true);
+            await saveRecordToBackend(pendingData);
+            // Clear the pending save flag
+            sessionStorage.removeItem("pending_bmi_save");
+            setIsSaving(false);
+          }
+        }
+      } catch (error) {
+        console.error("Error checking pending save:", error);
+        hasCheckedPendingSaveRef.current = false; // Reset on error to allow retry
+      }
+    };
+
+    // Check pending save when component mounts or when user navigates back to result page
+    if (location.pathname === "/result") {
+      checkPendingSave();
+    } else {
+      // Reset ref when navigating away to allow re-checking when coming back
+      hasCheckedPendingSaveRef.current = false;
+    }
+  }, [bmiInfo, location, isSaving]);
 
   const { bmi, category, height, weight } = bmiInfo || {};
 
@@ -46,8 +92,90 @@ function Result({ bmiInfo: propBmiInfo }) {
     navigate("/calculate");
   }
 
-  function handleSaveClick() {
-    setShowRegister(true);
+  async function handleSaveClick() {
+    if (!bmiInfo || !bmi || !category || !height || !weight) {
+      setSavedMessage("Missing BMI information");
+      setTimeout(() => setSavedMessage(""), 2500);
+      return;
+    }
+
+    setIsSaving(true);
+    setSavedMessage("");
+
+    try {
+      // Check if user is authenticated
+      const authRes = await axios.get(`${apiBase}/api/auth/me`, {
+        withCredentials: true,
+      });
+
+      if (authRes.data.authenticated) {
+        // User is logged in, save to backend
+        await saveRecordToBackend();
+      } else {
+        // User is not logged in, store BMI data for later save and navigate to login
+        sessionStorage.setItem("pending_bmi_save", JSON.stringify({
+          height: parseFloat(height),
+          weight: parseFloat(weight),
+          bmi: parseFloat(bmi),
+          category: category,
+        }));
+        navigate("/login", { 
+          state: { from: { pathname: "/result" } } 
+        });
+      }
+    } catch (error) {
+      console.error("Error checking auth:", error);
+      // If auth check fails, navigate to login with current location for redirect
+      navigate("/login", { 
+        state: { from: { pathname: "/result" } } 
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  async function saveRecordToBackend(data = null) {
+    try {
+      // Use provided data or current bmiInfo
+      const recordData = data || {
+        height: parseFloat(height),
+        weight: parseFloat(weight),
+        bmi: parseFloat(bmi),
+        category: category,
+      };
+
+      const response = await axios.post(
+        `${apiBase}/api/records`,
+        recordData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.data) {
+        setSavedMessage("Saved successfully");
+        setTimeout(() => setSavedMessage(""), 2500);
+      }
+    } catch (error) {
+      console.error("Error saving record:", error);
+      if (error.response?.status === 401) {
+        setSavedMessage("Please log in to save records");
+        // Store data for later save
+        const recordData = data || {
+          height: parseFloat(height),
+          weight: parseFloat(weight),
+          bmi: parseFloat(bmi),
+          category: category,
+        };
+        sessionStorage.setItem("pending_bmi_save", JSON.stringify(recordData));
+        navigate("/login", { 
+          state: { from: { pathname: "/result" } } 
+        });
+      } else {
+        setSavedMessage("Failed to save record");
+      }
+      setTimeout(() => setSavedMessage(""), 2500);
+    }
   }
 
   function handleRegisterSave(user) {
@@ -133,7 +261,9 @@ function Result({ bmiInfo: propBmiInfo }) {
           <button onClick={handleBack} className="notSave">
             Don't save
           </button>
-          <button onClick={handleSaveClick}>Save Result</button>
+          <button onClick={handleSaveClick} disabled={isSaving}>
+            {isSaving ? "Saving..." : "Save Result"}
+          </button>
         </div>
       </div>
       {showRegister && (

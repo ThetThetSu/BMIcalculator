@@ -1,14 +1,18 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 const apiBase = "http://localhost:5000";
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  // Get the redirect location from state or search params, default to /record
+  const from = location.state?.from?.pathname || new URLSearchParams(location.search).get("from") || "/record";
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -31,7 +35,8 @@ function Login() {
       );
       const { userId } = res.data || {};
       if (userId) {
-        navigate("/record");
+        // Navigate back to the previous page or default to /record
+        navigate(from, { replace: true });
       } else {
         setError("Login failed");
       }
@@ -76,6 +81,27 @@ function Login() {
               Cancel
             </button>
             <button type="submit">Login</button>
+          </div>
+          
+          <div style={{ marginTop: "16px", textAlign: "center" }}>
+            <span style={{ color: "#666" }}>Don't have an account? </span>
+            <button
+              type="button"
+              onClick={() => navigate("/registration", { 
+                state: { from: location.state?.from || { pathname: from } } 
+              })}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#3b82f6",
+                cursor: "pointer",
+                textDecoration: "underline",
+                padding: 0,
+                fontSize: "inherit"
+              }}
+            >
+              Sign up
+            </button>
           </div>
         </form>
       </div>
