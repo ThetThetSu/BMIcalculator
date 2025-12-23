@@ -214,8 +214,6 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1rem;
-  margin-top: -1rem;
   width: 100%;
   position: relative;
   padding: 0 1rem;
@@ -241,10 +239,10 @@ button:hover {
 }
 
 .auth-buttons button {
-  margin-top: 0;
   padding: 0.5rem 1rem;
   font-size: 14px;
   font-weight: 500;
+  margin-top: 0;
 }
 
 .auth-btn {
