@@ -45,8 +45,30 @@ function Registration({ defaultUsername = "", onCancel, onSave }) {
         if (onSave) {
           onSave({ username, password });
         }
-        // Always navigate back to the previous page or default to /record (like Login)
-        navigate(from, { replace: true });
+        
+        // Check if there's a pending BMI save and save it immediately
+        try {
+          const pendingSave = sessionStorage.getItem("pending_bmi_save");
+          if (pendingSave) {
+            const pendingData = JSON.parse(pendingSave);
+            // Save the pending record to backend
+            await axios.post(
+              `${apiBase}/api/records`,
+              pendingData,
+              {
+                withCredentials: true,
+              }
+            );
+            // Clear the pending save flag
+            sessionStorage.removeItem("pending_bmi_save");
+          }
+        } catch (error) {
+          console.error("Error saving pending record:", error);
+          // Continue navigation even if save fails
+        }
+        
+        // Always navigate to /record to show the saved record
+        navigate("/record", { replace: true });
       } else {
         setError("Registration failed");
       }

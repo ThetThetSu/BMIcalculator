@@ -9,10 +9,12 @@ import session from "express-session";
 const app = express();
 
 // Configure CORS to allow credentials
-app.use(cors({
-  origin: "http://localhost:5173", // Vite default port
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Vite default port
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
@@ -20,16 +22,20 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configure session middleware
-app.use(session({
-  secret: process.env.SESSION_SECRET || "bmi-calculator-secret-key-change-in-production",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: false, // Set to true if using HTTPS
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
-}));
+app.use(
+  session({
+    secret:
+      process.env.SESSION_SECRET ||
+      "bmi-calculator-secret-key-change-in-production",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // Set to true if using HTTPS
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
 
 const PORT = process.env.PORT || 5000;
 
@@ -106,7 +112,7 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// Check authentication status
+//todo Check authentication status
 app.get("/api/auth/me", async (req, res) => {
   try {
     if (req.session.userId) {

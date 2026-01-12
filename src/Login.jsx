@@ -36,7 +36,7 @@ function Login() {
       const { userId } = res.data || {};
       if (userId) {
         // Navigate back to the previous page or default to /record
-        navigate(from, { replace: true });
+        navigate("/record", { replace: true });
       } else {
         setError("Login failed");
       }

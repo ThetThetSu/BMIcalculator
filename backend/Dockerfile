@@ -1,5 +1,5 @@
 # Use official Node.js runtime as base image
-FROM node:v22.17.1
+FROM node:22
 
 # Set working directory inside container
 WORKDIR /usr/src/app
