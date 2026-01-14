@@ -11,7 +11,7 @@ const app = express();
 // Configure CORS to allow credentials
 app.use(
   cors({
-    origin: "http://localhost:5173", // Vite default port
+    origin: ["http://localhost:5173", "https://frontend-q3x9.onrender.com"], // Vite default port
     credentials: true,
   })
 );
