@@ -5,9 +5,8 @@ import { Doughnut } from "react-chartjs-2";
 import axios from "axios";
 import Category from "./Category";
 import Registration from "./Registration";
-
-const apiBase = "http://localhost:5000";
-
+import { API_URL } from "./api";
+const apiBase = API_URL;
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Result({ bmiInfo: propBmiInfo }) {

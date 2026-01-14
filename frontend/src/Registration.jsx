@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-
-const apiBase = "http://localhost:5000";
-
-function Login() {
+import { API_URL } from "./api";
+const apiBase = API_URL;
+function Registration({ defaultUsername = "", onCancel, onSave }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(defaultUsername || "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // Get the redirect location from state or search params, default to /record
   const from = location.state?.from?.pathname || new URLSearchParams(location.search).get("from") || "/record";
@@ -17,14 +17,17 @@ function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    
     if (!username || !password) {
       setError("Please fill all fields");
       return;
     }
 
+    setLoading(true);
+
     try {
       const res = await axios.post(
-        `${apiBase}/api/login`,
+        `${apiBase}/api/signup`,
         {
           username,
           password,
@@ -33,25 +36,69 @@ function Login() {
           withCredentials: true,
         }
       );
+
       const { userId } = res.data || {};
+      
       if (userId) {
-        // Navigate back to the previous page or default to /record
+        // If onSave is provided (modal use case), call it for any side effects
+        if (onSave) {
+          onSave({ username, password });
+        }
+        
+        // Check if there's a pending BMI save and save it immediately
+        try {
+          const pendingSave = sessionStorage.getItem("pending_bmi_save");
+          if (pendingSave) {
+            const pendingData = JSON.parse(pendingSave);
+            // Save the pending record to backend
+            await axios.post(
+              `${apiBase}/api/records`,
+              pendingData,
+              {
+                withCredentials: true,
+              }
+            );
+            // Clear the pending save flag
+            sessionStorage.removeItem("pending_bmi_save");
+          }
+        } catch (error) {
+          console.error("Error saving pending record:", error);
+          // Continue navigation even if save fails
+        }
+        
+        // Always navigate to /record to show the saved record
         navigate("/record", { replace: true });
       } else {
-        setError("Login failed");
+        setError("Registration failed");
       }
     } catch (err) {
-      if (err.response && err.response.status === 401)
-        setError("Invalid credentials");
-      else setError("Login failed");
+      if (err.response) {
+        if (err.response.status === 400) {
+          setError(err.response.data?.error || "Username already exists");
+        } else {
+          setError(err.response.data?.error || "Registration failed");
+        }
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   }
+
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel();
+    } else {
+      navigate(from || "/", { replace: true });
+    }
+  };
 
   return (
     <div className="modal-overlay">
       <div className="modal">
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <h2>Login to Save Result</h2>
+          <h2>Register to Save Result</h2>
         </div>
         <form onSubmit={handleSubmit}>
           <label>Username</label>
@@ -76,18 +123,21 @@ function Login() {
             <button
               type="button"
               className="notSave"
-              onClick={() => navigate(from || "/", { replace: true })}
+              onClick={handleCancel}
+              disabled={loading}
             >
               Cancel
             </button>
-            <button type="submit">Login</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "Registering..." : "Register"}
+            </button>
           </div>
           
           <div style={{ marginTop: "16px", textAlign: "center" }}>
-            <span style={{ color: "#666" }}>Don't have an account? </span>
+            <span style={{ color: "#666" }}>Already have an account? </span>
             <button
               type="button"
-              onClick={() => navigate("/registration", { 
+              onClick={() => navigate("/login", { 
                 state: { from: location.state?.from || { pathname: from } } 
               })}
               style={{
@@ -100,7 +150,7 @@ function Login() {
                 fontSize: "inherit"
               }}
             >
-              Sign up
+              Log in
             </button>
           </div>
         </form>
@@ -109,4 +159,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Registration;

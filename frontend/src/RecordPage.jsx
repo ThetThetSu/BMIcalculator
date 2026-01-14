@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
-const apiBase = "http://localhost:5000";
+import { API_URL } from "./api";
+const apiBase = API_URL;
 
 const RecordPage = () => {
   const [records, setRecords] = useState([]);
