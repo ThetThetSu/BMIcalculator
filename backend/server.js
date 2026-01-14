@@ -13,8 +13,7 @@ const app = express();
 // Configure CORS to allow credentials
 app.use(
   cors({
-    origin: "https://frontend-q3x9.onrender.com", // Vite default port
-    credentials: true,
+    origin: "https://frontend-q3x9.onrender.com" // Vite default port
   })
 );
 
