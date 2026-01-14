@@ -153,8 +153,11 @@ function Result({ bmiInfo: propBmiInfo }) {
       );
 
       if (response.data) {
+
         setSavedMessage("Saved successfully");
         setTimeout(() => setSavedMessage(""), 2500);
+        // Always navigate to /record to show the saved record
+        navigate("/record", { replace: true });
       }
     } catch (error) {
       console.error("Error saving record:", error);
