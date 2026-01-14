@@ -2,9 +2,11 @@ import "dotenv/config";
 // s
 import express from "express";
 import cors from "cors";
-import { query, initDb } from "./db.js";
+import { query, initDb, pool } from "./db.js";
 import bodyParser from "body-parser";
 import session from "express-session";
+import pgSession from "connect-pg-simple";
+const PgSession = pgSession(session);
 
 const app = express();
 
@@ -24,13 +26,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Configure session middleware
 app.use(
   session({
+    store: new PgSession({
+      pool: pool,
+      tableName: 'session',
+      createTableIfMissing: true,
+    }),
     secret:
       process.env.SESSION_SECRET ||
       "bmi-calculator-secret-key-change-in-production",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false, // Set to true if using HTTPS
+      secure: process.env.NODE_ENV === "production", // Set to true in production with HTTPS
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
