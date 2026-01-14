@@ -10,10 +10,17 @@ const PgSession = pgSession(session);
 
 const app = express();
 
+// Render/Heroku-style deployments sit behind a proxy/CDN. This is required for
+// secure cookies + correct protocol handling.
+app.set("trust proxy", 1);
+
 // Configure CORS to allow credentials
 app.use(
   cors({
-    origin: "https://frontend-q3x9.onrender.com" // Vite default port
+    origin: "https://frontend-q3x9.onrender.com",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -36,7 +43,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production", // Set to true in production with HTTPS
+      // Cross-site cookies require SameSite=None + Secure (HTTPS)
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
